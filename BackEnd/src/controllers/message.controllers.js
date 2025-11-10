@@ -1,9 +1,9 @@
-import Message from "../models/Message"
-import User from "../models/User";
-import cloudinary from "../lib/cloudinary.js";
+import Message from "../models/Message.js"
+import User from "../models/User.js";
+// import cloudinary from "../lib/cloudinary.js";
 
 
-export const GetAllContacts = async (req , res) => {
+export const getAllContacts = async (req , res) => {
     try{
         const loggedInUserId = req.user._id;
         const filteredUsers = await User.find({_id : { $ne: loggedInUserId}}).select("-password");
@@ -14,7 +14,7 @@ export const GetAllContacts = async (req , res) => {
         res.status(500).json({message:"Server Error"})
     }    
 }
-export const GetMessageByUserId = async(req , res) => {
+export const getMessagesByUserId = async(req , res) => {
     try{    const myId = req.user._id
     const {id : userToChatId}  = req.params
 
@@ -31,7 +31,7 @@ export const GetMessageByUserId = async(req , res) => {
     res.status(500).json({message: "Internal Server Error"})
 }
 }
-export const GetChatPartner = async(req , res) => {
+export const getChatPartners = async(req , res) => {
     try {
         const loggedInUserId = req.user_id;
         const message = await Message.Find({
@@ -51,44 +51,44 @@ export const GetChatPartner = async(req , res) => {
     }
 } ;
 
-export const sendMessage = async(req , res) => {
-    try
-    {
-        const {text , image} = req.body;
-        const {id : receiverId} = req.params;
-        const senderId = req.User._id;
+// export const sendMessage = async(req , res) => {
+//     try
+//     {
+//         const {text , image} = req.body;
+//         const {id : receiverId} = req.params;
+//         const senderId = req.User._id;
 
-        if(!text && !image) {
-            res.status(400).json({message: "text or Image is required"})
-        }
-        if(senderId.equal(receiverId)) {
-            res.status(400).json({message: "you cannot send message to yourself"})
-        }
-        const receiverExist = await User.exists({_id: receiverId})
-        if(!receiverExist) {
-            return res.status(400).json({message: "Receiver is not exist"})
-        }
+//         if(!text && !image) {
+//             res.status(400).json({message: "text or Image is required"})
+//         }
+//         if(senderId.equal(receiverId)) {
+//             res.status(400).json({message: "you cannot send message to yourself"})
+//         }
+//         const receiverExist = await User.exists({_id: receiverId})
+//         if(!receiverExist) {
+//             return res.status(400).json({message: "Receiver is not exist"})
+//         }
 
-        let imageUrl;
-        if(image) {
-            const uploadResponse = await cloudinary.uploader.upload(image);
-            let imageUrl = uploadResponse.secure_url;
-        }
-        const newMessage = new Message({
-            senderId,
-            receiverId,
-            text,
-            image: imageUrl,
-        })
-        await newMessage.save();
+//         let imageUrl;
+//         if(image) {
+//             const uploadResponse = await cloudinary.uploader.upload(image);
+//             let imageUrl = uploadResponse.secure_url;
+//         }
+//         const newMessage = new Message({
+//             senderId,
+//             receiverId,
+//             text,
+//             image: imageUrl,
+//         })
+//         await newMessage.save();
 
-        const receiverSocketId = getReceiverSocketId(receiverId);
-        if (receiverSocketId) {
-            io.to(receiverSocketId).emit("newMessage", newMessage);
-        }
-        res.status(201).json(newMessage);
-    }catch(error){
-        console.error("Error from in messageController:" , error)
-        res.status(500).json({message:"Internal Server Error"})
-    }
-};
+//         const receiverSocketId = getReceiverSocketId(receiverId);
+//         if (receiverSocketId) {
+//             io.to(receiverSocketId).emit("newMessage", newMessage);
+//         }
+//         res.status(201).json(newMessage);
+//     }catch(error){
+//         console.error("Error from in messageController:" , error)
+//         res.status(500).json({message:"Internal Server Error"})
+//     }
+// };
