@@ -25,17 +25,13 @@ export function createWelcomeEmailTemplate(name, clientURL) {
           <li style="margin-bottom: 0;">Share photos, videos, and more</li>
         </ul>
       </div>
-      
       <div style="text-align: center; margin: 30px 0;">
         <a href=${clientURL} style="background: linear-gradient(to right, #36D1DC, #5B86E5); color: white; text-decoration: none; padding: 12px 30px; border-radius: 50px; font-weight: 500; display: inline-block;">Open Messenger</a>
       </div>
-      
       <p style="margin-bottom: 5px;">If you need any help or have questions, we're always here to assist you.</p>
       <p style="margin-top: 0;">Happy messaging!</p>
-      
       <p style="margin-top: 25px; margin-bottom: 0;">Best regards,<br>The Messenger Team</p>
     </div>
-    
     <div style="text-align: center; padding: 20px; color: #999; font-size: 12px;">
       <p>© 2025 Messenger. All rights reserved.</p>
       <p>
